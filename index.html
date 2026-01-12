@@ -3,31 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NYONI-CMD-MAKER PRO</title>
+    <title>NYONI-CMD-MAKER PRO V2</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary: #ff4500; --bg: #050505; --text: #00ffcc; }
-        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; text-align: center; }
-        .main-box { max-width: 850px; margin: auto; background: #111; padding: 30px; border-radius: 20px; border: 3px solid var(--primary); box-shadow: 0 0 30px var(--primary); position: relative; }
+        :root { --primary: #ff4500; --secondary: #00d2ff; --bg: #0a0a0a; --card: #151515; }
+        body { background: var(--bg); color: #fff; font-family: 'Orbitron', sans-serif; padding: 20px; }
         
-        /* Language & Theme Selectors */
-        .top-controls { display: flex; justify-content: space-between; margin-bottom: 20px; }
-        select { background: #222; color: #fff; border: 1px solid var(--primary); padding: 8px; border-radius: 5px; cursor: pointer; }
+        .main-box { 
+            max-width: 900px; margin: auto; background: var(--card); padding: 30px; 
+            border-radius: 25px; border: 2px solid var(--primary); 
+            box-shadow: 0 0 40px rgba(255, 69, 0, 0.2); position: relative;
+        }
 
-        h1 { color: var(--primary); letter-spacing: 2px; text-shadow: 2px 2px #000; margin-top: 0; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: left; }
-        .input-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; color: #eee; font-weight: bold; font-size: 0.85em; }
-        input, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: #fff; box-sizing: border-box; outline: none; }
+        .top-controls { display: flex; justify-content: flex-end; margin-bottom: 20px; }
+        select { background: #222; color: #fff; border: 1px solid var(--primary); padding: 10px; border-radius: 8px; cursor: pointer; font-family: 'Rajdhani'; }
+
+        h1 { color: var(--primary); text-transform: uppercase; letter-spacing: 3px; font-size: 1.8rem; margin-bottom: 5px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
         
-        #imgPreview { width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 2px solid var(--primary); margin-top: 10px; display: none; margin-left: auto; margin-right: auto; }
+        .input-group { text-align: left; }
+        label { display: block; margin-bottom: 8px; color: var(--secondary); font-size: 0.8em; font-weight: bold; }
+        input, textarea, select.full { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #333; background: #000; color: #fff; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--secondary); box-shadow: 0 0 10px rgba(0, 210, 255, 0.3); }
+
+        #imgPreview { width: 100%; max-height: 150px; object-fit: contain; border-radius: 10px; margin-top: 10px; display: none; border: 1px dashed var(--primary); }
+
+        .gen-btn { 
+            width: 100%; padding: 20px; background: linear-gradient(45deg, #ff4500, #ff8c00); 
+            color: white; border: none; border-radius: 12px; font-weight: 900; 
+            cursor: pointer; font-size: 1.3em; margin-top: 25px; transition: 0.4s;
+            text-transform: uppercase;
+        }
+        .gen-btn:hover { letter-spacing: 2px; box-shadow: 0 0 30px var(--primary); transform: scale(1.01); }
+
+        /* Code Display Area */
+        #code-display { 
+            margin-top: 30px; background: #000; padding: 20px; border-radius: 12px; 
+            border: 2px solid #333; position: relative; display: none;
+            max-height: 500px; overflow-y: auto;
+        }
+        pre { margin: 0; color: #00ffcc; font-family: 'Consolas', monospace; font-size: 0.9em; line-height: 1.5; white-space: pre-wrap; }
         
-        button.gen-btn { width: 100%; padding: 18px; background: linear-gradient(45deg, #ff4500, #ff8c00); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 1.2em; margin-top: 15px; transition: 0.3s; }
-        button.gen-btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px var(--primary); }
-        
-        #code-display { margin-top: 25px; background: #000; padding: 20px; border-radius: 10px; color: #00ff44; font-family: 'Consolas', monospace; white-space: pre-wrap; display: none; border: 2px dashed var(--primary); font-size: 0.85em; cursor: pointer; text-align: left; }
-        .copy-hint { color: #ff8c00; font-size: 0.9em; margin-top: 15px; font-weight: bold; display: none; }
-        
-        .channel-link { display: block; margin-top: 20px; color: #25d366; text-decoration: none; font-weight: bold; font-size: 1.1em; border: 1px solid #25d366; padding: 10px; border-radius: 10px; }
+        .copy-btn {
+            position: absolute; top: 10px; right: 10px; background: var(--primary);
+            border: none; color: white; padding: 8px 15px; border-radius: 5px; cursor: pointer;
+        }
+
+        .channel-link { 
+            display: inline-block; margin-top: 25px; color: #25d366; text-decoration: none; 
+            font-weight: bold; border: 2px solid #25d366; padding: 12px 30px; border-radius: 50px; 
+            transition: 0.3s;
+        }
+        .channel-link:hover { background: #25d366; color: #000; }
     </style>
 </head>
 <body>
@@ -35,14 +62,13 @@
 <div class="main-box">
     <div class="top-controls">
         <select id="langSelect" onchange="changeLang()">
-            <option value="en">English</option>
-            <option value="sw">Kiswahili</option>
-            <option value="fr">Français</option>
+            <option value="en">🇺🇸 English</option>
+            <option value="sw">🇹🇿 Kiswahili</option>
         </select>
     </div>
 
     <h1 id="titleText">⚔️ NYONI-CMD-MAKER PRO ⚔️</h1>
-    <p id="subText" style="color: #fff; font-size: 0.9em;">Smart Menu & Plugin Factory</p>
+    <p id="subText" style="color: #888;">Professional Plugin Generator for WhatsApp Bots</p>
 
     <div class="grid">
         <div class="input-group">
@@ -54,51 +80,58 @@
             <input type="text" id="ownerName" placeholder="Nyoni XMD">
         </div>
         <div class="input-group">
-            <label id="lblNum">Owner Number:</label>
+            <label id="lblNum">Owner Number (With Country Code):</label>
             <input type="text" id="ownerNum" placeholder="2557XXXXXXXX">
         </div>
         <div class="input-group">
-            <label id="lblImg">Image URL:</label>
-            <input type="text" id="imgUrl" placeholder="https://..." oninput="previewImage()">
+            <label id="lblImg">Thumbnail Image URL:</label>
+            <input type="text" id="imgUrl" placeholder="https://catbox.moe/..." oninput="previewImage()">
             <img id="imgPreview" src="" alt="Preview">
         </div>
     </div>
 
-    <div class="input-group" style="text-align: left;">
-        <label id="lblType">Functionality:</label>
-        <select id="cmdType" style="width: 100%;">
-            <option value="speed">⚡ Real-time Speed/Ping</option>
-            <option value="list">📜 Smart Command List (Autopack)</option>
+    <hr style="margin: 25px 0; border: 0; border-top: 1px solid #333;">
+
+    <div class="input-group">
+        <label id="lblType">Select Plugin Mode:</label>
+        <select id="cmdType" class="full">
+            <option value="speed">⚡ Ultra-Fast Speed Test (Ping)</option>
+            <option value="list">📜 Advanced Menu List (Auto-Numbered)</option>
         </select>
     </div>
 
-    <div class="input-group" style="text-align: left;">
-        <label id="lblTrig">Command Trigger:</label>
-        <input type="text" id="cmdTrigger" placeholder="e.g. menu4">
+    <div class="grid" style="margin-top: 20px;">
+        <div class="input-group">
+            <label id="lblTrig">Main Trigger (Command):</label>
+            <input type="text" id="cmdTrigger" placeholder="menu2">
+        </div>
+        <div class="input-group">
+            <label id="lblReact">Reaction Emoji:</label>
+            <input type="text" id="cmdReact" placeholder="🔥">
+        </div>
     </div>
 
-    <div class="input-group" style="text-align: left;">
-        <label id="lblDesc">Commands (Separate with commas):</label>
-        <textarea id="cmdDesc" rows="4" placeholder="Alive, Ping, Repo, News, Uptime..."></textarea>
+    <div class="input-group" style="margin-top: 20px;">
+        <label id="lblDesc">Command List Content (If using List Mode):</label>
+        <textarea id="cmdDesc" rows="4" placeholder="Alive, Menu, Ping, Restart, Owner..."></textarea>
     </div>
 
-    <button class="gen-btn" onclick="generateCode()" id="btnText">GENERATE PLUGIN</button>
+    <button class="gen-btn" onclick="generateCode()" id="btnText">COMPILE PLUGIN</button>
 
-    <p class="copy-hint" id="copyHint">✅ Tap the code to copy everything!</p>
-    <div id="code-display" onclick="copyToClipboard()">
-        <code id="jsCode"></code>
+    <div id="code-display">
+        <button class="copy-btn" onclick="copyToClipboard()"><i class="fas fa-copy"></i> Copy</button>
+        <pre><code id="jsCode"></code></pre>
     </div>
 
     <a href="https://whatsapp.com/channel/0029VbAffhD2ZjChG9DX922r" target="_blank" class="channel-link" id="btnJoin">
-        📢 JOIN OFFICIAL CHANNEL
+        <i class="fab fa-whatsapp"></i> JOIN NYONI CHANNEL
     </a>
 </div>
 
 <script>
     const langData = {
-        en: { title: "⚔️ NYONI-CMD-MAKER PRO ⚔️", sub: "Smart Menu & Plugin Factory", bot: "Bot Name:", owner: "Owner Name:", num: "Owner Number:", img: "Image URL:", type: "Functionality:", trig: "Command Trigger:", desc: "Commands (Separate with commas):", btn: "GENERATE PLUGIN", join: "📢 JOIN OFFICIAL CHANNEL", hint: "✅ Tap the code to copy everything!", alert: "Enter a trigger!", copied: "Copied! ✅" },
-        sw: { title: "⚔️ NYONI-CMD-MAKER PRO ⚔️", sub: "Kiwanda cha Menu na Plugins", bot: "Jina la Bot:", owner: "Jina la Boss:", num: "Namba ya Simu:", img: "Link ya Picha:", type: "Kazi ya Command:", trig: "Jina la Amri:", desc: "Commands (Tenganisha kwa koma):", btn: "TENGENEZA KODI", join: "📢 JIUNGE NA CHANNEL", hint: "✅ Gusa kodi kuikopi yote!", alert: "Weka jina la amri!", copied: "Imekopiwa! ✅" },
-        fr: { title: "⚔️ NYONI-CMD-MAKER PRO ⚔️", sub: "Usine de Menu et Plugins", bot: "Nom du Bot:", owner: "Nom du Chef:", num: "Numéro de Tél:", img: "URL de l'image:", type: "Fonctionnalité:", trig: "Déclencheur:", desc: "Commandes (Séparez par des virgules):", btn: "GÉNÉRER LE CODE", join: "📢 REJOINDRE LA CHAÎNE", hint: "✅ Appuyez pour copier!", alert: "Entrez un déclencheur!", copied: "Copié! ✅" }
+        en: { title: "⚔️ NYONI-CMD-MAKER PRO ⚔️", sub: "Professional Plugin Generator", bot: "Bot Name:", owner: "Owner Name:", num: "Owner Number:", img: "Thumbnail Image URL:", type: "Select Plugin Mode:", trig: "Main Trigger:", desc: "Command List Content:", btn: "COMPILE PLUGIN", join: "JOIN NYONI CHANNEL", alert: "Please enter a command trigger!", copied: "Plugin Copied to Clipboard! ✅" },
+        sw: { title: "⚔️ NYONI-CMD-MAKER PRO ⚔️", sub: "Tengeneza Plugins za Uhakika", bot: "Jina la Bot:", owner: "Jina la Boss:", num: "Namba ya Simu:", img: "Picha ya Plugin (URL):", type: "Chagua Aina ya Plugin:", trig: "Neno la Amri:", desc: "Orodha ya Amri (Menu):", btn: "TENGENEZA KODI", join: "JIUNGE NA CHANNEL", alert: "Tafadhali weka neno la amri!", copied: "Kodi imekopiwa! Weka kwenye file jipya la .js ✅" }
     };
 
     function changeLang() {
@@ -114,8 +147,7 @@
         document.getElementById('lblTrig').innerText = d.trig;
         document.getElementById('lblDesc').innerText = d.desc;
         document.getElementById('btnText').innerText = d.btn;
-        document.getElementById('btnJoin').innerText = d.join;
-        document.getElementById('copyHint').innerText = d.hint;
+        document.getElementById('btnJoin').innerHTML = `<i class="fab fa-whatsapp"></i> ` + d.join;
     }
 
     function previewImage() {
@@ -132,31 +164,83 @@
         const num = document.getElementById('ownerNum').value || "255";
         const img = document.getElementById('imgUrl').value || "https://files.catbox.moe/k3h99y.jpg";
         const trigger = document.getElementById('cmdTrigger').value.trim().toLowerCase();
+        const react = document.getElementById('cmdReact').value || "⚔️";
         const type = document.getElementById('cmdType').value;
         const rawList = document.getElementById('cmdDesc').value;
 
         if(!trigger) return alert(langData[l].alert);
 
-        // HAPA NDIPO MCHAWI WA LIST ALIPO
-        const formattedList = rawList.split(',').map((item, index) => {
-            return `┃ \${index + 1}. 🔥 *${item.trim().toUpperCase()}*`;
-        }).join('\\n');
-
-        let scriptLogic = type === 'speed' ? `
+        let logic = "";
+        if(type === 'speed') {
+            logic = `
     const start = new Date().getTime();
-    const { key } = await conn.sendMessage(from, { text: '*⚡ Analyzing...*' }, { quoted: mek });
+    const { key } = await conn.sendMessage(from, { text: '*🚀 Testing Latency...*' }, { quoted: mek });
     const end = new Date().getTime();
     const ping = end - start;
-    const body = \`┏━━━━━━━━━━━━━━━━━━━━┓\\n┃  ⚡ *${bot}* ⚡\\n┗━━━━━━━━━━━━━━━━━━━━┛\\n\\n🚀 *Ping:* \${ping}ms\\n👤 *User:* \${pushName}\\n👑 *Owner:* ${owner}\\n\\n> *Powered by Nyoni XMD Engine*\`;
-    await conn.sendMessage(from, { text: body, edit: key });` : `
-    const body = \`┏━━━━━━━━━━━━━━━━━━━━┓\\n┃  🔥 *${bot}* 🔥\\n┗━━━━━━━━━━━━━━━━━━━━┛\\n\\n👤 *User:* \${pushName}\\n📞 *Contact:* ${num}\\n\\n*───「 COMMAND LIST 」───*\\n${formattedList}\\n\\n> *Enjoy the service by ${owner}* \`;
-    await conn.sendMessage(from, { text: body });`;
+    const message = \`┏━━━━━━━「 *SPEED* 」━━━━━━━┓
+┃
+┃ ⚡ *Ping:* \${ping}ms
+┃ 👤 *User:* \${pushName}
+┃ 🤖 *Bot:* ${bot}
+┃ 👑 *Owner:* ${owner}
+┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━┛\`;
+    await conn.sendMessage(from, { text: message, edit: key });`;
+        } else {
+            const listArr = rawList.split(',').filter(i => i.trim() !== "");
+            let listItems = "";
+            listArr.forEach((item, index) => {
+                listItems += `┃ \${index + 1}. 🔥 *${item.trim().toUpperCase()}*\\n`;
+            });
+            
+            logic = `
+    const listBody = \`┏━━━━━━━「 *MENU* 」━━━━━━━┓
+┃
+┃ 👤 *Hello:* \${pushName}
+┃ 📞 *Contact:* ${num}
+┃ 🤖 *Core:* ${bot}
+┃
+*───「 COMMANDS 」───*
+${listItems ? listItems : '┃ (No commands added)'}
+┃
+┗━━━━━━━━━━━━━━━━━━━━┛\`;
+    await conn.sendMessage(from, { text: listBody }, { quoted: mek });`;
+        }
 
-        const finalJS = `const { cmd } = require('../command');\n\ncmd({\n    pattern: "${trigger}",\n    react: "⚔️",\n    category: "generated",\n    filename: __filename\n}, async (conn, mek, m, { from, pushName }) => {\n    try {\n        ${scriptLogic}\n        await conn.sendMessage(from, { \n            contextInfo: {\n                externalAdReply: {\n                    title: "${bot}",\n                    body: "Created by ${owner}",\n                    thumbnailUrl: "${img}",\n                    sourceUrl: "https://whatsapp.com/channel/0029VbAffhD2ZjChG9DX922r",\n                    mediaType: 1,\n                    renderLargerThumbnail: true\n                }\n            }\n        });\n    } catch (e) { console.error(e); }\n});`;
+        const finalJS = `const { cmd, commands } = require('../command');
+
+cmd({
+    pattern: "${trigger}",
+    react: "${react}",
+    category: "generated",
+    desc: "Auto-generated by Nyoni Maker",
+    filename: __filename
+}, async (conn, mek, m, { from, pushName, reply }) => {
+    try {
+        ${logic}
+        
+        // Ad-Reply Footer (Image Card)
+        await conn.sendMessage(from, { 
+            contextInfo: {
+                externalAdReply: {
+                    title: "${bot}",
+                    body: "Created by ${owner}",
+                    thumbnailUrl: "${img}",
+                    sourceUrl: "https://whatsapp.com/channel/0029VbAffhD2ZjChG9DX922r",
+                    mediaType: 1,
+                    renderLargerThumbnail: true
+                }
+            }
+        });
+    } catch (e) { 
+        console.log(e);
+        reply("❌ Error occurred!");
+    }
+});`;
 
         document.getElementById('jsCode').textContent = finalJS;
         document.getElementById('code-display').style.display = "block";
-        document.getElementById('copyHint').style.display = "block";
+        window.scrollTo(0, document.body.scrollHeight);
     }
 
     function copyToClipboard() {
