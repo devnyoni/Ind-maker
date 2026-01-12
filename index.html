@@ -9,32 +9,31 @@
         body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; text-align: center; }
         .main-box { max-width: 850px; margin: auto; background: #111; padding: 30px; border-radius: 20px; border: 3px solid var(--primary); box-shadow: 0 0 30px var(--primary); position: relative; }
         
-        /* Language Switcher */
-        .lang-box { position: absolute; top: 15px; right: 20px; }
-        .lang-box select { background: #222; color: #fff; border: 1px solid var(--primary); padding: 5px; border-radius: 5px; cursor: pointer; }
+        /* Language & Theme Selectors */
+        .top-controls { display: flex; justify-content: space-between; margin-bottom: 20px; }
+        select { background: #222; color: #fff; border: 1px solid var(--primary); padding: 8px; border-radius: 5px; cursor: pointer; }
 
-        h1 { color: var(--primary); letter-spacing: 2px; text-shadow: 2px 2px #000; margin-bottom: 5px; margin-top: 10px; }
+        h1 { color: var(--primary); letter-spacing: 2px; text-shadow: 2px 2px #000; margin-top: 0; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: left; }
         .input-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; color: #eee; font-weight: bold; font-size: 0.85em; }
-        input, select, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: #fff; box-sizing: border-box; outline: none; }
+        input, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: #fff; box-sizing: border-box; outline: none; }
         
-        #imgPreview { width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary); margin-top: 10px; display: none; }
+        #imgPreview { width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 2px solid var(--primary); margin-top: 10px; display: none; margin-left: auto; margin-right: auto; }
         
         button.gen-btn { width: 100%; padding: 18px; background: linear-gradient(45deg, #ff4500, #ff8c00); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 1.2em; margin-top: 15px; transition: 0.3s; }
-        button.gen-btn:hover { transform: scale(1.02); box-shadow: 0 5px 15px var(--primary); }
+        button.gen-btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px var(--primary); }
         
-        .channel-btn { display: inline-block; width: 100%; padding: 15px; background: #25d366; color: white; text-decoration: none; border-radius: 10px; font-weight: bold; margin-top: 20px; transition: 0.3s; box-sizing: border-box; }
-        .channel-btn:hover { background: #128c7e; }
-
-        #code-display { margin-top: 25px; background: #000; padding: 20px; border-radius: 10px; color: #00ff44; font-family: 'Consolas', monospace; white-space: pre-wrap; display: none; border: 2px dashed var(--primary); font-size: 0.85em; cursor: pointer; text-align: left; position: relative; }
+        #code-display { margin-top: 25px; background: #000; padding: 20px; border-radius: 10px; color: #00ff44; font-family: 'Consolas', monospace; white-space: pre-wrap; display: none; border: 2px dashed var(--primary); font-size: 0.85em; cursor: pointer; text-align: left; }
         .copy-hint { color: #ff8c00; font-size: 0.9em; margin-top: 15px; font-weight: bold; display: none; }
+        
+        .channel-link { display: block; margin-top: 20px; color: #25d366; text-decoration: none; font-weight: bold; font-size: 1.1em; border: 1px solid #25d366; padding: 10px; border-radius: 10px; }
     </style>
 </head>
 <body>
 
 <div class="main-box">
-    <div class="lang-box">
+    <div class="top-controls">
         <select id="langSelect" onchange="changeLang()">
             <option value="en">English</option>
             <option value="sw">Kiswahili</option>
@@ -42,8 +41,8 @@
         </select>
     </div>
 
-    <h1 id="title">⚔️ NYONI-CMD-MAKER PRO ⚔️</h1>
-    <p id="subtitle" style="color: #fff; font-size: 0.9em;">Easily generate high-quality plugins for Mortal-Kombat-XR</p>
+    <h1 id="titleText">⚔️ NYONI-CMD-MAKER PRO ⚔️</h1>
+    <p id="subText" style="color: #fff; font-size: 0.9em;">Smart Menu & Plugin Factory</p>
 
     <div class="grid">
         <div class="input-group">
@@ -65,102 +64,58 @@
         </div>
     </div>
 
-    <div class="input-group">
-        <label id="lblType">Command Type:</label>
-        <select id="cmdType">
-            <option value="speed">⚡ Speed/Ping Test</option>
-            <option value="menu">📜 Fancy Menu/List</option>
+    <div class="input-group" style="text-align: left;">
+        <label id="lblType">Functionality:</label>
+        <select id="cmdType" style="width: 100%;">
+            <option value="speed">⚡ Real-time Speed/Ping</option>
+            <option value="list">📜 Smart Command List (Autopack)</option>
         </select>
     </div>
 
-    <div class="input-group">
+    <div class="input-group" style="text-align: left;">
         <label id="lblTrig">Command Trigger:</label>
-        <input type="text" id="cmdTrigger" placeholder="e.g. ping">
+        <input type="text" id="cmdTrigger" placeholder="e.g. menu4">
     </div>
 
-    <div class="input-group">
-        <label id="lblDesc">Description/List:</label>
-        <textarea id="cmdDesc" rows="3" placeholder="Details..."></textarea>
+    <div class="input-group" style="text-align: left;">
+        <label id="lblDesc">Commands (Separate with commas):</label>
+        <textarea id="cmdDesc" rows="4" placeholder="Alive, Ping, Repo, News, Uptime..."></textarea>
     </div>
 
-    <button class="gen-btn" onclick="generateSuperCode()" id="btnGen">GENERATE PLUGIN</button>
+    <button class="gen-btn" onclick="generateCode()" id="btnText">GENERATE PLUGIN</button>
 
-    <p class="copy-hint" id="copy-hint">✅ Click the code below to copy!</p>
-    <div id="code-display" onclick="copyCode()">
-        <code id="js-code"></code>
+    <p class="copy-hint" id="copyHint">✅ Tap the code to copy everything!</p>
+    <div id="code-display" onclick="copyToClipboard()">
+        <code id="jsCode"></code>
     </div>
 
-    <a href="https://whatsapp.com/channel/0029VbAffhD2ZjChG9DX922r" target="_blank" class="channel-btn" id="btnJoin">
+    <a href="https://whatsapp.com/channel/0029VbAffhD2ZjChG9DX922r" target="_blank" class="channel-link" id="btnJoin">
         📢 JOIN OFFICIAL CHANNEL
     </a>
 </div>
 
 <script>
-    const translations = {
-        en: {
-            title: "⚔️ NYONI-CMD-MAKER PRO ⚔️",
-            subtitle: "Easily generate high-quality plugins for Mortal-Kombat-XR",
-            lblBot: "Bot Name:",
-            lblOwner: "Owner Name:",
-            lblNum: "Owner Number:",
-            lblImg: "Image URL:",
-            lblType: "Command Type:",
-            lblTrig: "Command Trigger:",
-            lblDesc: "Description/List:",
-            btnGen: "GENERATE PLUGIN",
-            btnJoin: "📢 JOIN OFFICIAL CHANNEL",
-            hint: "✅ Click the code below to copy!",
-            alert: "Please enter a command trigger!",
-            copied: "Code Copied Successfully! ✅"
-        },
-        sw: {
-            title: "⚔️ NYONI-CMD-MAKER PRO ⚔️",
-            subtitle: "Tengeneza plugins kali za Mortal-Kombat-XR kwa urahisi",
-            lblBot: "Jina la Bot:",
-            lblOwner: "Jina la Mmiliki:",
-            lblNum: "Namba ya Mmiliki:",
-            lblImg: "Link ya Picha:",
-            lblType: "Aina ya Command:",
-            lblTrig: "Jina la Amri (Trigger):",
-            lblDesc: "Maelezo/Orodha:",
-            btnGen: "TENGENEZA KODI",
-            btnJoin: "📢 JIUNGE NA CHANNEL",
-            hint: "✅ Gusa kodi hapa chini ku-copy!",
-            alert: "Tafadhali jaza jina la amri!",
-            copied: "Kodi imekopiwa! ✅"
-        },
-        fr: {
-            title: "⚔️ NYONI-CMD-MAKER PRO ⚔️",
-            subtitle: "Générez facilement des plugins pour Mortal-Kombat-XR",
-            lblBot: "Nom du Bot:",
-            lblOwner: "Nom du Propriétaire:",
-            lblNum: "Numéro du Proprio:",
-            lblImg: "URL de l'image:",
-            lblType: "Type de Commande:",
-            lblTrig: "Déclencheur (Trigger):",
-            lblDesc: "Description/Liste:",
-            btnGen: "GÉNÉRER LE PLUGIN",
-            btnJoin: "📢 REJOINDRE LA CHAÎNE",
-            hint: "✅ Cliquez sur le code ci-dessous pour copier!",
-            alert: "Veuillez entrer un déclencheur !",
-            copied: "Code copié avec succès ! ✅"
-        }
+    const langData = {
+        en: { title: "⚔️ NYONI-CMD-MAKER PRO ⚔️", sub: "Smart Menu & Plugin Factory", bot: "Bot Name:", owner: "Owner Name:", num: "Owner Number:", img: "Image URL:", type: "Functionality:", trig: "Command Trigger:", desc: "Commands (Separate with commas):", btn: "GENERATE PLUGIN", join: "📢 JOIN OFFICIAL CHANNEL", hint: "✅ Tap the code to copy everything!", alert: "Enter a trigger!", copied: "Copied! ✅" },
+        sw: { title: "⚔️ NYONI-CMD-MAKER PRO ⚔️", sub: "Kiwanda cha Menu na Plugins", bot: "Jina la Bot:", owner: "Jina la Boss:", num: "Namba ya Simu:", img: "Link ya Picha:", type: "Kazi ya Command:", trig: "Jina la Amri:", desc: "Commands (Tenganisha kwa koma):", btn: "TENGENEZA KODI", join: "📢 JIUNGE NA CHANNEL", hint: "✅ Gusa kodi kuikopi yote!", alert: "Weka jina la amri!", copied: "Imekopiwa! ✅" },
+        fr: { title: "⚔️ NYONI-CMD-MAKER PRO ⚔️", sub: "Usine de Menu et Plugins", bot: "Nom du Bot:", owner: "Nom du Chef:", num: "Numéro de Tél:", img: "URL de l'image:", type: "Fonctionnalité:", trig: "Déclencheur:", desc: "Commandes (Séparez par des virgules):", btn: "GÉNÉRER LE CODE", join: "📢 REJOINDRE LA CHAÎNE", hint: "✅ Appuyez pour copier!", alert: "Entrez un déclencheur!", copied: "Copié! ✅" }
     };
 
     function changeLang() {
         const l = document.getElementById('langSelect').value;
-        document.getElementById('title').innerText = translations[l].title;
-        document.getElementById('subtitle').innerText = translations[l].subtitle;
-        document.getElementById('lblBot').innerText = translations[l].lblBot;
-        document.getElementById('lblOwner').innerText = translations[l].lblOwner;
-        document.getElementById('lblNum').innerText = translations[l].lblNum;
-        document.getElementById('lblImg').innerText = translations[l].lblImg;
-        document.getElementById('lblType').innerText = translations[l].lblType;
-        document.getElementById('lblTrig').innerText = translations[l].lblTrig;
-        document.getElementById('lblDesc').innerText = translations[l].lblDesc;
-        document.getElementById('btnGen').innerText = translations[l].btnGen;
-        document.getElementById('btnJoin').innerText = translations[l].btnJoin;
-        document.getElementById('copy-hint').innerText = translations[l].hint;
+        const d = langData[l];
+        document.getElementById('titleText').innerText = d.title;
+        document.getElementById('subText').innerText = d.sub;
+        document.getElementById('lblBot').innerText = d.bot;
+        document.getElementById('lblOwner').innerText = d.owner;
+        document.getElementById('lblNum').innerText = d.num;
+        document.getElementById('lblImg').innerText = d.img;
+        document.getElementById('lblType').innerText = d.type;
+        document.getElementById('lblTrig').innerText = d.trig;
+        document.getElementById('lblDesc').innerText = d.desc;
+        document.getElementById('btnText').innerText = d.btn;
+        document.getElementById('btnJoin').innerText = d.join;
+        document.getElementById('copyHint').innerText = d.hint;
     }
 
     function previewImage() {
@@ -170,7 +125,7 @@
         else { preview.style.display = "none"; }
     }
 
-    function generateSuperCode() {
+    function generateCode() {
         const l = document.getElementById('langSelect').value;
         const bot = document.getElementById('botName').value || "MORTAL-KOMBAT-XR";
         const owner = document.getElementById('ownerName').value || "Nyoni XMD";
@@ -178,32 +133,37 @@
         const img = document.getElementById('imgUrl').value || "https://files.catbox.moe/k3h99y.jpg";
         const trigger = document.getElementById('cmdTrigger').value.trim().toLowerCase();
         const type = document.getElementById('cmdType').value;
-        const desc = document.getElementById('cmdDesc').value.replace(/\n/g, "\\n");
+        const rawList = document.getElementById('cmdDesc').value;
 
-        if(!trigger) return alert(translations[l].alert);
+        if(!trigger) return alert(langData[l].alert);
 
-        let logic = type === 'speed' ? `
+        // HAPA NDIPO MCHAWI WA LIST ALIPO
+        const formattedList = rawList.split(',').map((item, index) => {
+            return `┃ \${index + 1}. 🔥 *${item.trim().toUpperCase()}*`;
+        }).join('\\n');
+
+        let scriptLogic = type === 'speed' ? `
     const start = new Date().getTime();
-    const msg = await conn.sendMessage(from, { text: '*⚡ Processing...*' }, { quoted: mek });
+    const { key } = await conn.sendMessage(from, { text: '*⚡ Analyzing...*' }, { quoted: mek });
     const end = new Date().getTime();
     const ping = end - start;
-    const body = \`╔════════════════════════╗\\n  ⚡ *${bot}* ⚡\\n╚════════════════════════╝\\n🚀 *Speed:* \${ping}ms\\n👤 *User:* \${pushName}\\n👑 *Owner:* ${owner}\`;
-    await conn.sendMessage(from, { text: body, edit: msg.key });` : `
-    const body = \`╔════════════════════════╗\\n  🔥 *${bot}* 🔥\\n╚════════════════════════╝\\n👤 *User:* \${pushName}\\n📞 *Contact:* ${num}\\n\\n*───「 INFO 」───*\\n${desc}\`;
+    const body = \`┏━━━━━━━━━━━━━━━━━━━━┓\\n┃  ⚡ *${bot}* ⚡\\n┗━━━━━━━━━━━━━━━━━━━━┛\\n\\n🚀 *Ping:* \${ping}ms\\n👤 *User:* \${pushName}\\n👑 *Owner:* ${owner}\\n\\n> *Powered by Nyoni XMD Engine*\`;
+    await conn.sendMessage(from, { text: body, edit: key });` : `
+    const body = \`┏━━━━━━━━━━━━━━━━━━━━┓\\n┃  🔥 *${bot}* 🔥\\n┗━━━━━━━━━━━━━━━━━━━━┛\\n\\n👤 *User:* \${pushName}\\n📞 *Contact:* ${num}\\n\\n*───「 COMMAND LIST 」───*\\n${formattedList}\\n\\n> *Enjoy the service by ${owner}* \`;
     await conn.sendMessage(from, { text: body });`;
 
-        const finalJS = `const { cmd } = require('../command');\n\ncmd({\n    pattern: "${trigger}",\n    react: "⚔️",\n    category: "generated",\n    filename: __filename\n}, async (conn, mek, m, { from, reply, pushName }) => {\n    try {\n        ${logic}\n        await conn.sendMessage(from, { \n            contextInfo: {\n                externalAdReply: {\n                    title: "${bot}",\n                    body: "Created by ${owner}",\n                    thumbnailUrl: "${img}",\n                    sourceUrl: "https://whatsapp.com/channel/0029VbAffhD2ZjChG9DX922r",\n                    mediaType: 1,\n                    renderLargerThumbnail: true\n                }\n            }\n        });\n    } catch (e) { console.error(e); }\n});`;
+        const finalJS = `const { cmd } = require('../command');\n\ncmd({\n    pattern: "${trigger}",\n    react: "⚔️",\n    category: "generated",\n    filename: __filename\n}, async (conn, mek, m, { from, pushName }) => {\n    try {\n        ${scriptLogic}\n        await conn.sendMessage(from, { \n            contextInfo: {\n                externalAdReply: {\n                    title: "${bot}",\n                    body: "Created by ${owner}",\n                    thumbnailUrl: "${img}",\n                    sourceUrl: "https://whatsapp.com/channel/0029VbAffhD2ZjChG9DX922r",\n                    mediaType: 1,\n                    renderLargerThumbnail: true\n                }\n            }\n        });\n    } catch (e) { console.error(e); }\n});`;
 
-        document.getElementById('js-code').textContent = finalJS;
+        document.getElementById('jsCode').textContent = finalJS;
         document.getElementById('code-display').style.display = "block";
-        document.getElementById('copy-hint').style.display = "block";
+        document.getElementById('copyHint').style.display = "block";
     }
 
-    function copyCode() {
+    function copyToClipboard() {
         const l = document.getElementById('langSelect').value;
-        const code = document.getElementById('js-code').textContent;
+        const code = document.getElementById('jsCode').textContent;
         navigator.clipboard.writeText(code).then(() => {
-            alert(translations[l].copied);
+            alert(langData[l].copied);
         });
     }
 </script>
