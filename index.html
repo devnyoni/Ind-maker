@@ -1,116 +1,210 @@
 <!DOCTYPE html>
-<html lang="sw">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NYONi-XMD MASTER BUILDER</title>
+    <title>NYONI-CMD-MAKER PRO</title>
     <style>
-        body { background: #0b0b0b; color: #00ffcc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; }
-        .box { max-width: 700px; margin: auto; background: #1a1a1a; padding: 25px; border-radius: 15px; border: 2px solid #ff4500; box-shadow: 0 0 25px #ff4500; }
-        h2 { text-align: center; color: #ff4500; text-transform: uppercase; }
+        :root { --primary: #ff4500; --bg: #050505; --text: #00ffcc; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; padding: 20px; text-align: center; }
+        .main-box { max-width: 850px; margin: auto; background: #111; padding: 30px; border-radius: 20px; border: 3px solid var(--primary); box-shadow: 0 0 30px var(--primary); position: relative; }
+        
+        /* Language Switcher */
+        .lang-box { position: absolute; top: 15px; right: 20px; }
+        .lang-box select { background: #222; color: #fff; border: 1px solid var(--primary); padding: 5px; border-radius: 5px; cursor: pointer; }
+
+        h1 { color: var(--primary); letter-spacing: 2px; text-shadow: 2px 2px #000; margin-bottom: 5px; margin-top: 10px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: left; }
         .input-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; color: #fff; font-size: 0.9em; }
-        input, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #444; background: #252525; color: #fff; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; background: linear-gradient(45deg, #ff4500, #ff8c00); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.1em; transition: 0.3s; }
-        button:hover { transform: scale(1.02); box-shadow: 0 0 15px #ff4500; }
-        #code-output { margin-top: 20px; background: #000; padding: 20px; border-radius: 10px; color: #00ff00; font-family: 'Consolas', monospace; white-space: pre-wrap; display: none; border: 1px solid #555; font-size: 0.85em; overflow-x: auto; }
+        label { display: block; margin-bottom: 5px; color: #eee; font-weight: bold; font-size: 0.85em; }
+        input, select, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: #fff; box-sizing: border-box; outline: none; }
+        
+        #imgPreview { width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid var(--primary); margin-top: 10px; display: none; }
+        
+        button.gen-btn { width: 100%; padding: 18px; background: linear-gradient(45deg, #ff4500, #ff8c00); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 1.2em; margin-top: 15px; transition: 0.3s; }
+        button.gen-btn:hover { transform: scale(1.02); box-shadow: 0 5px 15px var(--primary); }
+        
+        .channel-btn { display: inline-block; width: 100%; padding: 15px; background: #25d366; color: white; text-decoration: none; border-radius: 10px; font-weight: bold; margin-top: 20px; transition: 0.3s; box-sizing: border-box; }
+        .channel-btn:hover { background: #128c7e; }
+
+        #code-display { margin-top: 25px; background: #000; padding: 20px; border-radius: 10px; color: #00ff44; font-family: 'Consolas', monospace; white-space: pre-wrap; display: none; border: 2px dashed var(--primary); font-size: 0.85em; cursor: pointer; text-align: left; position: relative; }
+        .copy-hint { color: #ff8c00; font-size: 0.9em; margin-top: 15px; font-weight: bold; display: none; }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <h2>⚔️ MK-XR Master Builder ⚔️</h2>
-    <p style="text-align: center; font-size: 0.8em; color: #aaa;">Jaza taarifa zako hapa chini kutengeneza kodi ya index.</p>
-    
-    <div class="input-group">
-        <label>Jina la Bot (Bot Name):</label>
-        <input type="text" id="botName" placeholder="Mfano: MORTAL-KOMBAT-XR">
-    </div>
-
-    <div class="input-group">
-        <label>Jina la Mmiliki (Owner Name):</label>
-        <input type="text" id="ownerName" placeholder="Mfano: Nyoni XMD">
-    </div>
-
-    <div class="input-group">
-        <label>Link ya Channel ya WhatsApp:</label>
-        <input type="text" id="channelLink" placeholder="https://whatsapp.com/channel/...">
-    </div>
-
-    <div class="input-group">
-        <label>Jina la Command:</label>
-        <input type="text" id="cmdName" placeholder="Mfano: ping au menu">
-    </div>
-
-    <div class="input-group">
-        <label>Aina ya Kazi (Logic):</label>
-        <select id="logicType">
-            <option value="speed">Inapima Speed (Ping Check)</option>
-            <option value="fancy">Ujumbe wa Urembo (Fancy Message)</option>
+<div class="main-box">
+    <div class="lang-box">
+        <select id="langSelect" onchange="changeLang()">
+            <option value="en">English</option>
+            <option value="sw">Kiswahili</option>
+            <option value="fr">Français</option>
         </select>
     </div>
 
-    <button onclick="buildPlugin()">TENGENEZA KODI (GENERATE)</button>
+    <h1 id="title">⚔️ NYONI-CMD-MAKER PRO ⚔️</h1>
+    <p id="subtitle" style="color: #fff; font-size: 0.9em;">Easily generate high-quality plugins for Mortal-Kombat-XR</p>
 
-    <div id="code-output"></div>
+    <div class="grid">
+        <div class="input-group">
+            <label id="lblBot">Bot Name:</label>
+            <input type="text" id="botName" placeholder="MORTAL-KOMBAT-XR">
+        </div>
+        <div class="input-group">
+            <label id="lblOwner">Owner Name:</label>
+            <input type="text" id="ownerName" placeholder="Nyoni XMD">
+        </div>
+        <div class="input-group">
+            <label id="lblNum">Owner Number:</label>
+            <input type="text" id="ownerNum" placeholder="2557XXXXXXXX">
+        </div>
+        <div class="input-group">
+            <label id="lblImg">Image URL:</label>
+            <input type="text" id="imgUrl" placeholder="https://..." oninput="previewImage()">
+            <img id="imgPreview" src="" alt="Preview">
+        </div>
+    </div>
+
+    <div class="input-group">
+        <label id="lblType">Command Type:</label>
+        <select id="cmdType">
+            <option value="speed">⚡ Speed/Ping Test</option>
+            <option value="menu">📜 Fancy Menu/List</option>
+        </select>
+    </div>
+
+    <div class="input-group">
+        <label id="lblTrig">Command Trigger:</label>
+        <input type="text" id="cmdTrigger" placeholder="e.g. ping">
+    </div>
+
+    <div class="input-group">
+        <label id="lblDesc">Description/List:</label>
+        <textarea id="cmdDesc" rows="3" placeholder="Details..."></textarea>
+    </div>
+
+    <button class="gen-btn" onclick="generateSuperCode()" id="btnGen">GENERATE PLUGIN</button>
+
+    <p class="copy-hint" id="copy-hint">✅ Click the code below to copy!</p>
+    <div id="code-display" onclick="copyCode()">
+        <code id="js-code"></code>
+    </div>
+
+    <a href="https://whatsapp.com/channel/0029VbAffhD2ZjChG9DX922r" target="_blank" class="channel-btn" id="btnJoin">
+        📢 JOIN OFFICIAL CHANNEL
+    </a>
 </div>
 
 <script>
-    function buildPlugin() {
-        const botName = document.getElementById('botName').value || "MORTAL-KOMBAT-XR";
-        const owner = document.getElementById('ownerName').value || "Nyoni XMD";
-        const link = document.getElementById('channelLink').value || "#";
-        const cmd = document.getElementById('cmdName').value.trim().toLowerCase();
-        const logic = document.getElementById('logicType').value;
-        
-        if(!cmd) return alert("Jaza jina la command!");
+    const translations = {
+        en: {
+            title: "⚔️ NYONI-CMD-MAKER PRO ⚔️",
+            subtitle: "Easily generate high-quality plugins for Mortal-Kombat-XR",
+            lblBot: "Bot Name:",
+            lblOwner: "Owner Name:",
+            lblNum: "Owner Number:",
+            lblImg: "Image URL:",
+            lblType: "Command Type:",
+            lblTrig: "Command Trigger:",
+            lblDesc: "Description/List:",
+            btnGen: "GENERATE PLUGIN",
+            btnJoin: "📢 JOIN OFFICIAL CHANNEL",
+            hint: "✅ Click the code below to copy!",
+            alert: "Please enter a command trigger!",
+            copied: "Code Copied Successfully! ✅"
+        },
+        sw: {
+            title: "⚔️ NYONI-CMD-MAKER PRO ⚔️",
+            subtitle: "Tengeneza plugins kali za Mortal-Kombat-XR kwa urahisi",
+            lblBot: "Jina la Bot:",
+            lblOwner: "Jina la Mmiliki:",
+            lblNum: "Namba ya Mmiliki:",
+            lblImg: "Link ya Picha:",
+            lblType: "Aina ya Command:",
+            lblTrig: "Jina la Amri (Trigger):",
+            lblDesc: "Maelezo/Orodha:",
+            btnGen: "TENGENEZA KODI",
+            btnJoin: "📢 JIUNGE NA CHANNEL",
+            hint: "✅ Gusa kodi hapa chini ku-copy!",
+            alert: "Tafadhali jaza jina la amri!",
+            copied: "Kodi imekopiwa! ✅"
+        },
+        fr: {
+            title: "⚔️ NYONI-CMD-MAKER PRO ⚔️",
+            subtitle: "Générez facilement des plugins pour Mortal-Kombat-XR",
+            lblBot: "Nom du Bot:",
+            lblOwner: "Nom du Propriétaire:",
+            lblNum: "Numéro du Proprio:",
+            lblImg: "URL de l'image:",
+            lblType: "Type de Commande:",
+            lblTrig: "Déclencheur (Trigger):",
+            lblDesc: "Description/Liste:",
+            btnGen: "GÉNÉRER LE PLUGIN",
+            btnJoin: "📢 REJOINDRE LA CHAÎNE",
+            hint: "✅ Cliquez sur le code ci-dessous pour copier!",
+            alert: "Veuillez entrer un déclencheur !",
+            copied: "Code copié avec succès ! ✅"
+        }
+    };
 
-        let scriptBody = "";
-        
-        if(logic === 'speed') {
-            scriptBody = `
+    function changeLang() {
+        const l = document.getElementById('langSelect').value;
+        document.getElementById('title').innerText = translations[l].title;
+        document.getElementById('subtitle').innerText = translations[l].subtitle;
+        document.getElementById('lblBot').innerText = translations[l].lblBot;
+        document.getElementById('lblOwner').innerText = translations[l].lblOwner;
+        document.getElementById('lblNum').innerText = translations[l].lblNum;
+        document.getElementById('lblImg').innerText = translations[l].lblImg;
+        document.getElementById('lblType').innerText = translations[l].lblType;
+        document.getElementById('lblTrig').innerText = translations[l].lblTrig;
+        document.getElementById('lblDesc').innerText = translations[l].lblDesc;
+        document.getElementById('btnGen').innerText = translations[l].btnGen;
+        document.getElementById('btnJoin').innerText = translations[l].btnJoin;
+        document.getElementById('copy-hint').innerText = translations[l].hint;
+    }
+
+    function previewImage() {
+        const url = document.getElementById('imgUrl').value;
+        const preview = document.getElementById('imgPreview');
+        if(url) { preview.src = url; preview.style.display = "block"; }
+        else { preview.style.display = "none"; }
+    }
+
+    function generateSuperCode() {
+        const l = document.getElementById('langSelect').value;
+        const bot = document.getElementById('botName').value || "MORTAL-KOMBAT-XR";
+        const owner = document.getElementById('ownerName').value || "Nyoni XMD";
+        const num = document.getElementById('ownerNum').value || "255";
+        const img = document.getElementById('imgUrl').value || "https://files.catbox.moe/k3h99y.jpg";
+        const trigger = document.getElementById('cmdTrigger').value.trim().toLowerCase();
+        const type = document.getElementById('cmdType').value;
+        const desc = document.getElementById('cmdDesc').value.replace(/\n/g, "\\n");
+
+        if(!trigger) return alert(translations[l].alert);
+
+        let logic = type === 'speed' ? `
     const start = new Date().getTime();
-    const msg = await conn.sendMessage(from, { text: '*⚡ Analyzing ${botName} Speed...*' }, { quoted: mek });
+    const msg = await conn.sendMessage(from, { text: '*⚡ Processing...*' }, { quoted: mek });
     const end = new Date().getTime();
     const ping = end - start;
-    const bodyText = \`╔════════════════════════╗\\n      ⚡ *${botName}* ⚡\\n╚════════════════════════╝\\n👤 *User:* \${pushName}\\n🚀 *Ping:* \${ping}ms\\n📶 *Status:* Active\\n👑 *Owner:* ${owner}\\n\\n> *Kasi ya ajabu ya ${botName} Engine*\`;
-    await conn.sendMessage(from, { text: bodyText, edit: msg.key });`;
-        } else {
-            scriptBody = `
-    const bodyText = \`╔════════════════════════╗\\n      🔥 *${botName}* 🔥\\n╚════════════════════════╝\\n👤 *User:* \${pushName}\\n📅 *Date:* \${new Date().toLocaleDateString()}\\n👑 *Owner:* ${owner}\\n\\n📍 *Info:* Hii ni command maalum ya ${botName}.\\n\\n> *Powered by ${owner}* \`;
-    await conn.sendMessage(from, { text: bodyText }, { quoted: mek });`;
-        }
+    const body = \`╔════════════════════════╗\\n  ⚡ *${bot}* ⚡\\n╚════════════════════════╝\\n🚀 *Speed:* \${ping}ms\\n👤 *User:* \${pushName}\\n👑 *Owner:* ${owner}\`;
+    await conn.sendMessage(from, { text: body, edit: msg.key });` : `
+    const body = \`╔════════════════════════╗\\n  🔥 *${bot}* 🔥\\n╚════════════════════════╝\\n👤 *User:* \${pushName}\\n📞 *Contact:* ${num}\\n\\n*───「 INFO 」───*\\n${desc}\`;
+    await conn.sendMessage(from, { text: body });`;
 
-        const finalJS = `const { cmd } = require('../command');
+        const finalJS = `const { cmd } = require('../command');\n\ncmd({\n    pattern: "${trigger}",\n    react: "⚔️",\n    category: "generated",\n    filename: __filename\n}, async (conn, mek, m, { from, reply, pushName }) => {\n    try {\n        ${logic}\n        await conn.sendMessage(from, { \n            contextInfo: {\n                externalAdReply: {\n                    title: "${bot}",\n                    body: "Created by ${owner}",\n                    thumbnailUrl: "${img}",\n                    sourceUrl: "https://whatsapp.com/channel/0029VbAffhD2ZjChG9DX922r",\n                    mediaType: 1,\n                    renderLargerThumbnail: true\n                }\n            }\n        });\n    } catch (e) { console.error(e); }\n});`;
 
-cmd({
-    pattern: "${cmd}",
-    react: "⚔️",
-    category: "generated",
-    filename: __filename
-}, async (conn, mek, m, { from, reply, pushName }) => {
-    try {
-        ${scriptBody}
-        
-        // External Ad Reply Setup
-        await conn.sendMessage(from, { 
-            contextInfo: {
-                externalAdReply: {
-                    title: "${botName.toUpperCase()} SYSTEM",
-                    body: "Created by ${owner}",
-                    thumbnailUrl: "https://files.catbox.moe/k3h99y.jpg",
-                    sourceUrl: "${link}",
-                    mediaType: 1,
-                    renderLargerThumbnail: true
-                }
-            }
+        document.getElementById('js-code').textContent = finalJS;
+        document.getElementById('code-display').style.display = "block";
+        document.getElementById('copy-hint').style.display = "block";
+    }
+
+    function copyCode() {
+        const l = document.getElementById('langSelect').value;
+        const code = document.getElementById('js-code').textContent;
+        navigator.clipboard.writeText(code).then(() => {
+            alert(translations[l].copied);
         });
-    } catch (e) { console.error(e); }
-});`;
-
-        const out = document.getElementById('code-output');
-        out.textContent = finalJS;
-        out.style.display = "block";
     }
 </script>
 
