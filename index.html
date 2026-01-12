@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NYONi-XMD MASTER BUILDER</title>
+    <style>
+        body { background: #0b0b0b; color: #00ffcc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; }
+        .box { max-width: 700px; margin: auto; background: #1a1a1a; padding: 25px; border-radius: 15px; border: 2px solid #ff4500; box-shadow: 0 0 25px #ff4500; }
+        h2 { text-align: center; color: #ff4500; text-transform: uppercase; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: #fff; font-size: 0.9em; }
+        input, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #444; background: #252525; color: #fff; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: linear-gradient(45deg, #ff4500, #ff8c00); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.1em; transition: 0.3s; }
+        button:hover { transform: scale(1.02); box-shadow: 0 0 15px #ff4500; }
+        #code-output { margin-top: 20px; background: #000; padding: 20px; border-radius: 10px; color: #00ff00; font-family: 'Consolas', monospace; white-space: pre-wrap; display: none; border: 1px solid #555; font-size: 0.85em; overflow-x: auto; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>⚔️ MK-XR Master Builder ⚔️</h2>
+    <p style="text-align: center; font-size: 0.8em; color: #aaa;">Jaza taarifa zako hapa chini kutengeneza kodi ya index.</p>
+    
+    <div class="input-group">
+        <label>Jina la Bot (Bot Name):</label>
+        <input type="text" id="botName" placeholder="Mfano: MORTAL-KOMBAT-XR">
+    </div>
+
+    <div class="input-group">
+        <label>Jina la Mmiliki (Owner Name):</label>
+        <input type="text" id="ownerName" placeholder="Mfano: Nyoni XMD">
+    </div>
+
+    <div class="input-group">
+        <label>Link ya Channel ya WhatsApp:</label>
+        <input type="text" id="channelLink" placeholder="https://whatsapp.com/channel/...">
+    </div>
+
+    <div class="input-group">
+        <label>Jina la Command:</label>
+        <input type="text" id="cmdName" placeholder="Mfano: ping au menu">
+    </div>
+
+    <div class="input-group">
+        <label>Aina ya Kazi (Logic):</label>
+        <select id="logicType">
+            <option value="speed">Inapima Speed (Ping Check)</option>
+            <option value="fancy">Ujumbe wa Urembo (Fancy Message)</option>
+        </select>
+    </div>
+
+    <button onclick="buildPlugin()">TENGENEZA KODI (GENERATE)</button>
+
+    <div id="code-output"></div>
+</div>
+
+<script>
+    function buildPlugin() {
+        const botName = document.getElementById('botName').value || "MORTAL-KOMBAT-XR";
+        const owner = document.getElementById('ownerName').value || "Nyoni XMD";
+        const link = document.getElementById('channelLink').value || "#";
+        const cmd = document.getElementById('cmdName').value.trim().toLowerCase();
+        const logic = document.getElementById('logicType').value;
+        
+        if(!cmd) return alert("Jaza jina la command!");
+
+        let scriptBody = "";
+        
+        if(logic === 'speed') {
+            scriptBody = `
+    const start = new Date().getTime();
+    const msg = await conn.sendMessage(from, { text: '*⚡ Analyzing ${botName} Speed...*' }, { quoted: mek });
+    const end = new Date().getTime();
+    const ping = end - start;
+    const bodyText = \`╔════════════════════════╗\\n      ⚡ *${botName}* ⚡\\n╚════════════════════════╝\\n👤 *User:* \${pushName}\\n🚀 *Ping:* \${ping}ms\\n📶 *Status:* Active\\n👑 *Owner:* ${owner}\\n\\n> *Kasi ya ajabu ya ${botName} Engine*\`;
+    await conn.sendMessage(from, { text: bodyText, edit: msg.key });`;
+        } else {
+            scriptBody = `
+    const bodyText = \`╔════════════════════════╗\\n      🔥 *${botName}* 🔥\\n╚════════════════════════╝\\n👤 *User:* \${pushName}\\n📅 *Date:* \${new Date().toLocaleDateString()}\\n👑 *Owner:* ${owner}\\n\\n📍 *Info:* Hii ni command maalum ya ${botName}.\\n\\n> *Powered by ${owner}* \`;
+    await conn.sendMessage(from, { text: bodyText }, { quoted: mek });`;
+        }
+
+        const finalJS = `const { cmd } = require('../command');
+
+cmd({
+    pattern: "${cmd}",
+    react: "⚔️",
+    category: "generated",
+    filename: __filename
+}, async (conn, mek, m, { from, reply, pushName }) => {
+    try {
+        ${scriptBody}
+        
+        // External Ad Reply Setup
+        await conn.sendMessage(from, { 
+            contextInfo: {
+                externalAdReply: {
+                    title: "${botName.toUpperCase()} SYSTEM",
+                    body: "Created by ${owner}",
+                    thumbnailUrl: "https://files.catbox.moe/k3h99y.jpg",
+                    sourceUrl: "${link}",
+                    mediaType: 1,
+                    renderLargerThumbnail: true
+                }
+            }
+        });
+    } catch (e) { console.error(e); }
+});`;
+
+        const out = document.getElementById('code-output');
+        out.textContent = finalJS;
+        out.style.display = "block";
+    }
+</script>
+
+</body>
+</html>
